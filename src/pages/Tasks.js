@@ -8,7 +8,7 @@ import Loader from 'components/Loader/Loader';
 import ContactList from 'components/ContactList';
 import Filter from 'components/Filter';
 import { ListTitle } from 'components/ContactList/ContactList.styled';
-import { useGetContactsQuery } from 'redux/contactsApi';
+import { useGetContactsQuery } from 'redux/contacts/contactsApi';
 
 export default function Tasks() {
   //   const dispatch = useDispatch();

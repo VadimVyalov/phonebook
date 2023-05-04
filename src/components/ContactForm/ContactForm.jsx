@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { useSelector } from 'react-redux';
 //import { addContact } from 'redux/operations';
 import { selectContacts, selectResult } from 'redux/selectors';
-import { useAddContactMutation } from 'redux/contactsApi';
+import { useAddContactMutation } from 'redux/contacts/contactsApi';
 
 const ContactForm = () => {
   const [name, setName] = useState('');
