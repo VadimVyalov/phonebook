@@ -38,7 +38,7 @@ const ContactForm = () => {
     setName('');
     setNumber('');
   };
-  console.log(contacts);
+  //console.log(contacts);
   return (
     <FormContainer>
       <FormTitle>Телефонна книга</FormTitle>

@@ -20,49 +20,48 @@ const filterSlice = createSlice({
 //     },
 //   },
 // });
+const initialState = {
+  user: { name: '', email: '' },
+  token: '',
+  status: '',
+  isLoggedIn: false,
+};
 
 const tokenUserSlice = createSlice({
   name: 'user',
-  initialState: {
-    user: '',
-    token: '',
-    status: '',
-    isLoggedIn: false,
-  },
-  //initialState: { token: '' },
-
+  initialState,
   reducers: {},
   extraReducers: builder => {
-    builder.addMatcher(
-      authApi.endpoints.login.matchFulfilled,
-      (state, { payload }) => {
-        // state.token = payload.token;
-        state.user = payload.user;
-        // state.status = 'Ок';
-        // state.error = false;
-        state.token = payload.token;
-        state.isLoggedIn = true;
-      }
-    );
-    // .addMatcher(
-    //   authApi.endpoints.login.matchRejected,
-    //   (state, { payload }) => {
-    //     console.log('state R:', state, 'payload ', payload);
-    //     state.status = payload.status;
-    //     state.error = true;
-    //   }
-    // );
+    builder
+      .addMatcher(
+        authApi.endpoints.regist.matchFulfilled,
+        (state, { payload }) => {
+          state.user = payload.user;
+          state.token = payload.token;
+          state.isLoggedIn = true;
+          state.status = 'login';
+        }
+      )
+      .addMatcher(
+        authApi.endpoints.login.matchFulfilled,
+        (state, { payload }) => {
+          state.user = payload.user;
+          state.token = payload.token;
+          state.isLoggedIn = true;
+          state.status = 'login';
+        }
+      )
+      .addMatcher(
+        authApi.endpoints.authentication.matchFulfilled,
+        (state, { payload }) => {
+          state.user = payload;
+          state.isLoggedIn = true;
+        }
+      )
+      .addMatcher(authApi.endpoints.logout.matchFulfilled, () => initialState);
   },
 });
 
-//export default slice.reducer;
-
-//export const selectCurrentUser = (state: RootState) => state.auth.user;
-
 export const { setFilter } = filterSlice.actions;
 export const filterReducer = filterSlice.reducer;
-
-// export const { setToken } = tokenSlice.actions;
-// export const tokenReducer = tokenSlice.reducer;
-
 export const tokenUserReducer = tokenUserSlice.reducer;

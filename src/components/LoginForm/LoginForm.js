@@ -1,11 +1,11 @@
 import { useLoginMutation } from 'redux/auth/authApi';
 import css from './LoginForm.module.css';
-import React from 'react';
+import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 
-import TextField from '@mui/material/TextField';
-import Slider from '@mui/material/Slider';
-import { Input } from '@mui/material';
+// import TextField from '@mui/material/TextField';
+// import Slider from '@mui/material/Slider';
+// import { Input } from '@mui/material';
 
 export const LoginForm = () => {
   const [login] = useLoginMutation();
@@ -13,8 +13,9 @@ export const LoginForm = () => {
   const { register, handleSubmit, reset, formState } = useForm({
     defaultValues: { email: 'bbc@mail.com', password: 'A123456a' },
   });
-  const { isDirty, isValid } = formState;
-  React.useEffect(() => {
+  // const { isDirty, isValid } = formState;
+  const { isValid } = formState;
+  useEffect(() => {
     if (formState.isSubmitSuccessful) {
       reset({ password: '', email: '' });
     }

@@ -25,7 +25,7 @@ export const authApi = createApi({
       query: () => `/current`,
       providesTags: ['Auth'],
     }),
-    register: builder.mutation({
+    regist: builder.mutation({
       query: credentials => ({
         url: `/signup`,
         method: 'POST',
@@ -53,7 +53,7 @@ export const authApi = createApi({
 
 export const {
   useAuthenticationQuery,
-  useRegisterMutation,
+  useRegistMutation,
   useLoginMutation,
   useLogoutMutation,
 } = authApi;
