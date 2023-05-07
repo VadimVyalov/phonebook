@@ -1,7 +1,7 @@
 import { useAuth } from 'hooks/useAuth';
 import { useDispatch } from 'react-redux';
-import { authApi, useLogoutMutation } from 'redux/auth/authApi';
-import { contactsApi, useGetContactsQuery } from 'redux/contacts/contactsApi';
+import { useLogoutMutation } from 'redux/auth/authApi';
+import { contactsApi } from 'redux/contacts/contactsApi';
 
 import css from './UserMenu.module.css';
 
