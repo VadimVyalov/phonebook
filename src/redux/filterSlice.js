@@ -11,39 +11,49 @@ const filterSlice = createSlice({
   },
 });
 
-const tokenSlice = createSlice({
-  name: 'token',
-  initialState: '',
-  // reducers: {
-  //   setToken(_, { payload }) {
-  //     return payload;
-  // },
-  // },
+// const tokenSlice = createSlice({
+//   name: 'user',
+//   initialState: '',
+//   reducers: {
+//     setToken(state, { payload }) {
+//       state.token = payload;
+//     },
+//   },
+// });
+
+const tokenUserSlice = createSlice({
+  name: 'user',
+  initialState: {
+    user: '',
+    token: '',
+    status: '',
+    isLoggedIn: false,
+  },
+  //initialState: { token: '' },
+
   reducers: {},
   extraReducers: builder => {
     builder.addMatcher(
       authApi.endpoints.login.matchFulfilled,
       (state, { payload }) => {
-        state = payload.result;
+        // state.token = payload.token;
+        state.user = payload.user;
+        // state.status = 'Ок';
+        // state.error = false;
+        state.token = payload.token;
+        state.isLoggedIn = true;
       }
     );
+    // .addMatcher(
+    //   authApi.endpoints.login.matchRejected,
+    //   (state, { payload }) => {
+    //     console.log('state R:', state, 'payload ', payload);
+    //     state.status = payload.status;
+    //     state.error = true;
+    //   }
+    // );
   },
 });
-
-// const tokenSlice = createSlice({
-//   name: 'usersss',
-//   initialState: { user: null, token: null },
-//   reducers: {},
-//   extraReducers: builder => {
-//     builder.addMatcher(
-//       authApi.endpoints.login.matchFulfilled,
-//       (state, { payload }) => {
-//         state.token = payload.result.token;
-//         state.user = payload.result.user;
-//       }
-//     );
-//   },
-// });
 
 //export default slice.reducer;
 
@@ -52,5 +62,7 @@ const tokenSlice = createSlice({
 export const { setFilter } = filterSlice.actions;
 export const filterReducer = filterSlice.reducer;
 
-export const { setToken } = tokenSlice.actions;
-export const tokenReducer = tokenSlice.reducer;
+// export const { setToken } = tokenSlice.actions;
+// export const tokenReducer = tokenSlice.reducer;
+
+export const tokenUserReducer = tokenUserSlice.reducer;

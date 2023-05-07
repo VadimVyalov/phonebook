@@ -1,5 +1,5 @@
 import { configureStore } from '@reduxjs/toolkit';
-import { filterReducer, tokenReducer } from './filterSlice';
+import { filterReducer, tokenUserReducer } from './filterSlice';
 import { contactsApi } from './contacts/contactsApi';
 
 //import { getDefaultMiddleware } from '@reduxjs/toolkit';
@@ -21,9 +21,9 @@ import { authReducer } from './auth/slice';
 import { authApi } from './auth/authApi';
 
 const authPersistConfig = {
-  key: 'auth',
+  key: 'token',
   storage,
-  whitelist: ['token'],
+  // whitelist: ['token'],
 };
 
 // const middleware = [
@@ -36,9 +36,9 @@ const authPersistConfig = {
 
 export const store = configureStore({
   reducer: {
-    //token: tokenReducer,
+    auth: persistReducer(authPersistConfig, tokenUserReducer),
     filter: filterReducer,
-    auth: persistReducer(authPersistConfig, authReducer),
+    //  auth: authReducer,
     [contactsApi.reducerPath]: contactsApi.reducer,
     [authApi.reducerPath]: authApi.reducer,
   },

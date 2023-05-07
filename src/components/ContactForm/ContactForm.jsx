@@ -2,14 +2,14 @@ import { FormContainer, Button, FormTitle } from './ContactForm.styled';
 import { useState } from 'react';
 import { useSelector } from 'react-redux';
 //import { addContact } from 'redux/operations';
-import { selectContacts, selectResult } from 'redux/selectors';
+import { selectContacts } from 'redux/selectors';
 import { useAddContactMutation } from 'redux/contacts/contactsApi';
 
 const ContactForm = () => {
   const [name, setName] = useState('');
   const [number, setNumber] = useState('');
   const contacts = useSelector(selectContacts);
-  const contactsApi = useSelector(selectResult);
+  //const contactsApi = useSelector(selectResult);
   const [
     addContact, // This is the mutation trigger
     // { isLoading: isUpdating }, // This is the destructured mutation result
@@ -38,7 +38,7 @@ const ContactForm = () => {
     setName('');
     setNumber('');
   };
-  console.log(contactsApi);
+  console.log(contacts);
   return (
     <FormContainer>
       <FormTitle>Телефонна книга</FormTitle>

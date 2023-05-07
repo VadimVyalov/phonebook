@@ -4,11 +4,11 @@
 
 import Container from 'components/Container';
 import ContactForm from 'components/ContactForm';
-import Loader from 'components/Loader/Loader';
-import ContactList from 'components/ContactList';
-import Filter from 'components/Filter';
-import { ListTitle } from 'components/ContactList/ContactList.styled';
-import { useGetContactsQuery } from 'redux/contacts/contactsApi';
+//import Loader from 'components/Loader/Loader';
+//import ContactList from 'components/ContactList';
+//import Filter from 'components/Filter';
+//import { ListTitle } from 'components/ContactList/ContactList.styled';
+//import { useGetContactsQuery } from 'redux/contacts/contactsApi';
 
 export default function Tasks() {
   //   const dispatch = useDispatch();
@@ -28,7 +28,7 @@ export default function Tasks() {
   //       <TaskList />
   //     </>
   //   );
-  const { isLoading, isError: error } = useGetContactsQuery();
+  //const { isLoading, isError: error } = useGetContactsQuery();
 
   return (
     <Container>
@@ -36,7 +36,7 @@ export default function Tasks() {
         <title>Your tasks</title>
       </Helmet> */}
       <ContactForm />
-      <Filter />
+      {/* <Filter />
       {isLoading && !error && <Loader size={300} />}
       {!isLoading && !error && <ContactList />}
       {error && (
@@ -44,7 +44,7 @@ export default function Tasks() {
           <ListTitle>Щось пішло не так</ListTitle>
           <p>{error}</p>
         </>
-      )}
+      )} */}
     </Container>
   );
 }

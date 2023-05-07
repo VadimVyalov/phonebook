@@ -7,15 +7,15 @@ const inititial = [];
 
 export const selectResult = contactsApi.endpoints.getContacts.select();
 
-export const selectToken = createSelector(
-  authApi.endpoints.authentication.select(),
-  Result => Result
-);
+// export const selectToken = createSelector(
+//   authApi.endpoints.authentication.select(),
+//   Result => Result
+// );
 
-export const selectTokenLogin = createSelector(
-  authApi.endpoints.login.select(),
-  Result => Result //?.data?.token ?? ''
-);
+// export const selectTokenLogin = createSelector(
+//   authApi.endpoints.login.matchFulfilled(),
+//   Result => Result //?.data?.token ?? ''
+// );
 
 export const selectContacts = createSelector(
   selectResult,

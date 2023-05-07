@@ -6,7 +6,7 @@ import { PrivateRoute } from './PrivateRoute';
 import { RestrictedRoute } from './RestrictedRoute';
 import { refreshUser } from 'redux/auth/operations';
 import { useAuth } from 'hooks/useAuth';
-import { useAuthenticationQuery } from 'redux/auth/authApi';
+//import { useAuthenticationQuery } from 'redux/auth/authApi';
 
 const HomePage = lazy(() => import('../pages/Home'));
 const RegisterPage = lazy(() => import('../pages/Register'));
@@ -32,13 +32,11 @@ export const App = () => {
   // );
   const dispatch = useDispatch();
   const { isRefreshing } = useAuth();
-  const authentication = useAuthenticationQuery();
+  //const authentication = useAuthenticationQuery();
 
   useEffect(() => {
     dispatch(refreshUser());
   }, [dispatch]);
-
-  console.log(isRefreshing);
 
   return isRefreshing ? (
     <b>Refreshing user...</b>
