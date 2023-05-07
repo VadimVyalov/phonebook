@@ -5,6 +5,7 @@ import { ListItem } from 'components/ContactListItem/ContactListItem';
 
 const ContactList = () => {
   const filtredContacts = useSelector(selectfiltredContact);
+
   return filtredContacts.length ? (
     <ContactListContainer>
       <ListTitle>Контакти</ListTitle>

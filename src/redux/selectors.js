@@ -1,13 +1,11 @@
 import { createSelector } from '@reduxjs/toolkit';
-import { contactsApi } from './contactsApi';
+import { contactsApi } from './contacts/contactsApi';
 export const selectFilter = state => state.filter;
 
 const inititial = [];
 
-export const selectResult = contactsApi.endpoints.getContacts.select();
-
 export const selectContacts = createSelector(
-  selectResult,
+  contactsApi.endpoints.getContacts.select(),
   Result => Result?.data ?? inititial
 );
 

@@ -1,6 +1,6 @@
 import { ContactItem } from 'components/ContactList/ContactList.styled';
 import Loader from 'components/Loader/Loader';
-import { useDeleteContactMutation } from 'redux/contactsApi';
+import { useDeleteContactMutation } from 'redux/contacts/contactsApi';
 
 export const ListItem = ({ id, name, number }) => {
   const [deleteContact, { isLoading }] = useDeleteContactMutation();
