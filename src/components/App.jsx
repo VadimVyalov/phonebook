@@ -3,8 +3,10 @@ import { Route, Routes } from 'react-router-dom';
 import { Layout } from './Layout';
 import { PrivateRoute } from './PrivateRoute';
 import { RestrictedRoute } from './RestrictedRoute';
-import { useAuth } from 'hooks/useAuth';
 import { useAuthenticationQuery } from 'redux/auth/authApi';
+import { useSelector } from 'react-redux';
+import { darkTheme, lightTheme } from './theme/theme';
+import { ThemeProvider } from '@mui/material/styles';
 
 const HomePage = lazy(() => import('../pages/Home'));
 const RegisterPage = lazy(() => import('../pages/Register'));
@@ -12,50 +14,39 @@ const LoginPage = lazy(() => import('../pages/Login'));
 const TasksPage = lazy(() => import('../pages/Tasks'));
 
 export const App = () => {
-  // const { isLoading, isError: error } = useGetContactsQuery();
-
-  // return (
-  //   <Container>
-  //     <ContactForm />
-  //     <Filter />
-  //     {isLoading && !error && <Loader size={300} />}
-  //     {!isLoading && !error && <ContactList />}
-  //     {error && (
-  //       <>
-  //         <ListTitle>Щось пішло не так</ListTitle>
-  //         <p>{error}</p>
-  //       </>
-  //     )}
-  //   </Container>
-  // );
-  const { isRefreshing } = useAuth();
+  const theme = useSelector(state => state.auth);
   useAuthenticationQuery();
-
-  return isRefreshing ? (
-    <b>Refreshing user...</b>
-  ) : (
-    <Routes>
-      <Route path="/" element={<Layout />}>
-        <Route index element={<HomePage />} />
-        <Route
-          path="/register"
-          element={
-            <RestrictedRoute redirectTo="/tasks" component={<RegisterPage />} />
-          }
-        />
-        <Route
-          path="/login"
-          element={
-            <RestrictedRoute redirectTo="/tasks" component={<LoginPage />} />
-          }
-        />
-        <Route
-          path="/tasks"
-          element={
-            <PrivateRoute redirectTo="/login" component={<TasksPage />} />
-          }
-        />
-      </Route>
-    </Routes>
+  return (
+    <ThemeProvider theme={theme.darkTheme ? darkTheme : lightTheme}>
+      <Routes>
+        <Route path="/" element={<Layout />}>
+          <Route index element={<HomePage />} />
+          <Route
+            path="/register"
+            element={
+              <RestrictedRoute
+                redirectTo="/contacts"
+                component={<RegisterPage />}
+              />
+            }
+          />
+          <Route
+            path="/login"
+            element={
+              <RestrictedRoute
+                redirectTo="/contacts"
+                component={<LoginPage />}
+              />
+            }
+          />
+          <Route
+            path="/contacts"
+            element={
+              <PrivateRoute redirectTo="/login" component={<TasksPage />} />
+            }
+          />
+        </Route>
+      </Routes>
+    </ThemeProvider>
   );
 };

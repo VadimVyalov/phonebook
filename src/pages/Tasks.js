@@ -29,7 +29,8 @@ export default function Tasks() {
   //     </>
   //   );
   const { isLoading, isError: error } = useGetContactsQuery();
-
+  // const isLoading = useSelector(selectIsLoading);
+  // const error = useSelector(selectError);
   return (
     <Container>
       {/* <Helmet>

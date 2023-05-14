@@ -1,12 +1,5 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 
-// const initialState = {
-//   user: { name: null, email: null },
-//   token: null,
-//   isLoggedIn: false,
-//   isRefreshing: false,
-// };
-
 export const authApi = createApi({
   reducerPath: 'authApi',
   baseQuery: fetchBaseQuery({

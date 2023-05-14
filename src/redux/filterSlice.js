@@ -11,26 +11,25 @@ const filterSlice = createSlice({
   },
 });
 
-// const tokenSlice = createSlice({
-//   name: 'user',
-//   initialState: '',
-//   reducers: {
-//     setToken(state, { payload }) {
-//       state.token = payload;
-//     },
-//   },
-// });
 const initialState = {
   user: { name: '', email: '' },
   token: '',
-  status: '',
+  darkTheme: false,
+  autoTheme: true,
   isLoggedIn: false,
 };
 
-const tokenUserSlice = createSlice({
+const userStateSlice = createSlice({
   name: 'user',
   initialState,
-  reducers: {},
+  reducers: {
+    setDarkTheme: (state, { payload }) => {
+      state.darkTheme = payload; //!state.darkTheme;
+    },
+    setAutoTheme: (state, { payload }) => {
+      state.autoTheme = payload;
+    },
+  },
   extraReducers: builder => {
     builder
       .addMatcher(
@@ -39,7 +38,6 @@ const tokenUserSlice = createSlice({
           state.user = payload.user;
           state.token = payload.token;
           state.isLoggedIn = true;
-          state.status = 'login';
         }
       )
       .addMatcher(
@@ -48,7 +46,6 @@ const tokenUserSlice = createSlice({
           state.user = payload.user;
           state.token = payload.token;
           state.isLoggedIn = true;
-          state.status = 'login';
         }
       )
       .addMatcher(
@@ -64,4 +61,5 @@ const tokenUserSlice = createSlice({
 
 export const { setFilter } = filterSlice.actions;
 export const filterReducer = filterSlice.reducer;
-export const tokenUserReducer = tokenUserSlice.reducer;
+export const { setDarkTheme, setAutoTheme } = userStateSlice.actions;
+export const userStateReducer = userStateSlice.reducer;
