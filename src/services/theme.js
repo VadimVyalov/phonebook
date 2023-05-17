@@ -19,12 +19,13 @@ export const lightTheme = createTheme({
     icon: {
       menu: '#F00',
       darkMode: '#448aff',
+      border: '#0971f1',
     },
     text: {
       primary: '#111111',
     },
     formInput: {
-      main: '#808080',
+      main: '#0971f1',
     },
   },
 });
@@ -55,6 +56,7 @@ export const darkTheme = createTheme({
       main: '#00F',
       menu: '#0F0',
       darkMode: '#ffff00',
+      border: '#e0e0e0',
     },
   },
 });

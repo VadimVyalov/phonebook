@@ -12,8 +12,9 @@ import {
 } from '@mui/material';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
 import { CustomTextField } from '../CustomTextField/CustomTextField';
-import { loginValidation, passwordValidation } from '../../services/validation';
-import { useLoginMutation } from 'redux/auth/authApi';
+import { emailValidation, passwordValidation } from '../../services/validation';
+import { useLoginMutation } from 'redux/userAuth/authApi';
+import ButtonLink from 'components/ButtonLink/ButtonLink';
 
 export const LoginForm = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -42,11 +43,11 @@ export const LoginForm = () => {
         boxSizing: 'border-box',
       }}
     >
-      <Typography variant="h4" component="h4">
-        Войдите
+      <Typography variant="h6" component="h2">
+        Щоб отримати доступ
       </Typography>
       <Typography variant="subtitle1" gutterBottom component="p">
-        Чтобы получить доступ
+        Введіть пошту і пароль
       </Typography>
       <Box
         sx={{
@@ -59,9 +60,9 @@ export const LoginForm = () => {
         component="form"
         onSubmit={handleSubmit(data => {
           toast.promise(login(data).unwrap(), {
-            loading: 'wait...',
-            success: <b>success</b>,
-            error: error => `${error?.data?._message}`,
+            loading: 'Намагаюсь увійти...',
+            success: response => `З поверненням ${response?.user?.name}`,
+            error: error => `Щось пішло не так ${error?.data?._message}`,
           });
         })}
 
@@ -72,12 +73,12 @@ export const LoginForm = () => {
         <Controller
           control={control}
           name="email"
-          rules={loginValidation}
+          rules={emailValidation}
           defaultValue={''}
           render={({ field }) => (
             <CustomTextField
+              label="Пошта"
               color="formInput"
-              label="Логин"
               onChange={e => field.onChange(e)}
               value={field.value}
               fullWidth={true}
@@ -94,6 +95,7 @@ export const LoginForm = () => {
           render={({ field }) => (
             <CustomTextField
               label="Пароль"
+              color="formInput"
               onChange={e => field.onChange(e)}
               value={field.value}
               fullWidth={true}
@@ -120,45 +122,25 @@ export const LoginForm = () => {
           disableElevation={true}
           sx={{
             marginTop: 2,
+            width: '100px',
           }}
         >
-          Войти
+          Увійти
         </Button>
+        <ButtonLink link="/register">
+          <Typography variant="subtitle1" component="span">
+            Нема акаунту?{' '}
+          </Typography>
+
+          <Typography
+            variant="subtitle1"
+            component="span"
+            sx={{ color: 'blue' }}
+          >
+            Зареєструйся.
+          </Typography>
+        </ButtonLink>
       </Box>
-      <Typography variant="subtitle1" component="span">
-        Нету аккаунта?{' '}
-      </Typography>
-      <Typography variant="subtitle1" component="span" sx={{ color: 'blue' }}>
-        Зарегистрируйтесь
-      </Typography>
     </Paper>
   );
 };
-// eslint-disable-next-line
-{
-  /* <Controller
-          control={control}
-          name="phone"
-          rules={phoneValidation}
-          defaultValue={''}
-          render={({ field: { value, onChange } }) => (
-            <InputMask
-              mask="(099)-999-99-99"
-              value={value}
-              onChange={e => onChange(e)}
-            >
-              {Props => (
-                <CustomTextField
-                  {...Props}
-                  label="Телефон"
-                  type="tel"
-                  fullWidth={true}
-                  //   margin="normal"
-                  error={!!errors.phone?.message}
-                  helperText={errors?.phone?.message}
-                />
-              )}
-            </InputMask>
-          )}
-        /> */
-}

@@ -9,7 +9,7 @@ import Brightness6Icon from '@mui/icons-material/Brightness6';
 import Brightness7Icon from '@mui/icons-material/Brightness7';
 import { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { setAutoTheme, setDarkTheme } from '../../redux/filterSlice';
+import { setAutoTheme, setDarkTheme } from '../../redux/filter/filterSlice';
 import useMediaQuery from '@mui/material/useMediaQuery';
 
 export default function CustomizedSlider() {

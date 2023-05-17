@@ -1,47 +1,91 @@
-import { useAuth } from 'hooks/useAuth';
-
-import Button from '@mui/material/Button';
-import HomeRoundedIcon from '@mui/icons-material/HomeRounded';
-import ImportContactsRoundedIcon from '@mui/icons-material/ImportContactsRounded';
+import {
+  HomeRounded,
+  ImportContactsRounded,
+  PersonAddAlt1Rounded,
+} from '@mui/icons-material';
 import { Box, Tooltip, IconButton, Zoom } from '@mui/material';
+import { useAuth } from 'hooks/useAuth';
 import { useLocation, useNavigate } from 'react-router-dom';
 
 export const Navigation = () => {
-  const { isLoggedIn } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
-  //console.log('location :', location);
+  const { isLoggedIn } = useAuth();
+
   return (
     <Box component="nav" sx={{ flexGrow: 1 }}>
       <Tooltip
-        title="Home page"
+        title="Домашня сторінка"
         TransitionComponent={Zoom}
         arrow
         placement="bottom-start"
       >
         <IconButton
-          sx={{ color: 'icon.menu' }}
+          sx={{
+            border: '1px solid',
+            borderColor: () =>
+              location.pathname === '/' ? 'icon.border' : 'transparent',
+
+            '&:hover': {
+              border: '1px solid',
+              borderColor: 'icon.border',
+            },
+          }}
           type="link"
-          variant={location.pathname === '/' ? 'contained' : 'outlined'}
           onClick={() => navigate('/')}
         >
-          <HomeRoundedIcon color="icon.menu" />
+          <HomeRounded color="icon.menu" />
         </IconButton>
       </Tooltip>
       <Tooltip
-        title="Contacts page"
+        title="Список контактів"
         TransitionComponent={Zoom}
         arrow
         placement="bottom-start"
       >
         <IconButton
-          type="button"
-          variant={location.pathname === '/contacts' ? 'contained' : 'outlined'}
+          sx={{
+            border: '1px solid',
+            borderColor: () =>
+              location.pathname === '/contacts' ? 'icon.border' : 'transparent',
+            '&:hover': {
+              border: '1px solid',
+              borderColor: 'icon.border',
+            },
+          }}
+          type="link"
           onClick={() => navigate('/contacts')}
         >
-          <ImportContactsRoundedIcon />
+          <ImportContactsRounded />
         </IconButton>
       </Tooltip>
+      {isLoggedIn && (
+        <Tooltip
+          title="Додати контакт"
+          TransitionComponent={Zoom}
+          arrow
+          placement="bottom-start"
+        >
+          <IconButton
+            sx={{
+              border: '1px solid',
+              borderColor: () =>
+                location.pathname === '/addContacts'
+                  ? 'icon.border'
+                  : 'transparent',
+
+              '&:hover': {
+                border: '1px solid',
+                borderColor: 'icon.border',
+              },
+            }}
+            type="button"
+            onClick={() => navigate('/addContacts')}
+          >
+            <PersonAddAlt1Rounded />
+          </IconButton>
+        </Tooltip>
+      )}
     </Box>
   );
 };

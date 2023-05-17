@@ -1,7 +1,8 @@
 import { useDispatch, useSelector } from 'react-redux';
-import { FilterContainer } from './Filter.styled';
-import { setFilter } from 'redux/filterSlice';
-import { selectFilter } from 'redux/selectors';
+import { setFilter } from 'redux/filter/filterSlice';
+import { selectFilter } from '../../redux/filter/filterSlice';
+import { Box } from '@mui/material';
+import { CustomTextField } from '../CustomTextField/CustomTextField';
 const Filter = () => {
   const filter = useSelector(selectFilter);
   const dispatch = useDispatch();
@@ -9,20 +10,15 @@ const Filter = () => {
     dispatch(setFilter(evt.target.value.toLowerCase()));
   };
   return (
-    <FilterContainer>
-      <label>
-        <span>{'Пошук контактів за ім`ям'}</span>
-        <input
-          type="text"
-          name="filter"
-          // pattern="\+?\d{1,4}?[-.\s]?\(?\d{1,3}?\)?[-.\s]?\d{1,4}[-.\s]?\d{1,4}[-.\s]?\d{1,9}"
-          title="Phone number must be digits and can contain spaces, dashes, parentheses and can start with +"
-          required
-          value={filter}
-          onChange={onChange}
-        />
-      </label>
-    </FilterContainer>
+    <Box pt={2} pb={2}>
+      <CustomTextField
+        label="Пошук контактів за ім`ям"
+        color="formInput"
+        onChange={onChange}
+        value={filter}
+        fullWidth={true}
+      />
+    </Box>
   );
 };
 

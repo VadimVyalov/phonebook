@@ -1,81 +1,118 @@
-import { FormContainer, Button, FormTitle } from './ContactForm.styled';
-import { useState } from 'react';
+import { useEffect } from 'react';
 import { useSelector } from 'react-redux';
 //import { addContact } from 'redux/operations';
-import { selectContacts } from 'redux/selectors';
+import { selectContacts } from 'redux/contacts/selectors';
 import { useAddContactMutation } from 'redux/contacts/contactsApi';
+import { useForm, Controller, useFormState } from 'react-hook-form';
+import toast from 'react-hot-toast';
+import { Box, Button } from '@mui/material';
+import { CustomTextField } from '../CustomTextField/CustomTextField';
+import { contactValidation, phoneValidation } from '../../services/validation';
+import ReactInputMask from 'react-input-mask';
 
 const ContactForm = () => {
-  const [name, setName] = useState('');
-  const [number, setNumber] = useState('');
   const contacts = useSelector(selectContacts);
-  //const contactsApi = useSelector(selectResult);
-  const [
-    addContact, // This is the mutation trigger
-    // { isLoading: isUpdating }, // This is the destructured mutation result
-  ] = useAddContactMutation();
+  const [addContact] = useAddContactMutation();
 
-  const handleChangeName = evt => {
-    setName(evt.target.value);
-  };
+  const { control, handleSubmit, reset, formState, setError } = useForm();
+  const { errors } = useFormState({
+    control,
+  });
 
-  const handleChangeNumber = evt => {
-    setNumber(evt.target.value);
-  };
+  const { isValid } = formState;
 
-  const handleSubmit = evt => {
-    evt.preventDefault();
-    if (contacts.find(contact => contact.name === name)) {
-      window.alert(`Контакт ${name} вже є в списку`);
+  useEffect(() => {
+    if (formState.isSubmitSuccessful) {
+      reset({ name: '', number: '' });
+    }
+  }, [formState, reset, isValid]);
+
+  //console.log(contacts);
+  const handleAddContact = data => {
+    if (contacts.find(contact => contact.name === data.name)) {
+      setError('name', {
+        type: 'custom',
+        message: `Контакт з ім'ям ${data.name} вже є в списку`,
+      });
       return;
     }
-    // dispatch(addContact({ name, number }));
-    addContact({ name, number });
-    reset();
+    toast.promise(addContact(data).unwrap(), {
+      loading: 'Намагаюсь додати новий контакт',
+      success: `Контакт " ${data.name} " додано`,
+      error: error => `${error?.data?._message}`,
+    });
   };
 
-  const reset = () => {
-    setName('');
-    setNumber('');
-  };
-  //console.log(contacts);
   return (
-    <FormContainer>
-      <FormTitle>Телефонна книга</FormTitle>
+    <>
+      <Box
+        sx={{
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          gap: 2,
+          width: '100%',
+        }}
+        component="form"
+        onSubmit={handleSubmit(handleAddContact)}
+      >
+        <Controller
+          control={control}
+          name="name"
+          rules={contactValidation}
+          defaultValue={''}
+          render={({ field }) => (
+            <CustomTextField
+              label="ім'я"
+              color="formInput"
+              onChange={e => field.onChange(e)}
+              value={field.value}
+              fullWidth={true}
+              error={!!errors.name?.message}
+              helperText={errors?.name?.message}
+            />
+          )}
+        />
+        <Controller
+          control={control}
+          name="number"
+          rules={phoneValidation}
+          defaultValue={''}
+          render={({ field: { value, onChange } }) => (
+            <ReactInputMask
+              mask="(099)-999-99-99"
+              value={value}
+              onChange={e => onChange(e)}
+            >
+              {inputProps => (
+                <CustomTextField
+                  {...inputProps}
+                  label="Телефон"
+                  color="formInput"
+                  type="tel"
+                  fullWidth={true}
+                  error={!!errors.number?.message}
+                  helperText={errors?.number?.message}
+                />
+              )}
+            </ReactInputMask>
+          )}
+        />
 
-      <form onSubmit={handleSubmit}>
-        <label>
-          <span>{'Ім`я'}</span>
-          <input
-            type="text"
-            name="name"
-            pattern="^[a-zA-Zа-яА-Я]+(([' -][a-zA-Zа-яА-Я ])?[a-zA-Zа-яА-Я]*)*$"
-            title="Name may contain only letters, apostrophe, dash and spaces. For example Adrian, Jacob Mercer, Charles de Batz de Castelmore d'Artagnan"
-            required
-            placeholder="Enter name (Rosie Simpson)"
-            value={name}
-            onChange={handleChangeName}
-          />
-        </label>
-        <label>
-          <span>{'Телефон'}</span>
-          <input
-            type="tel"
-            name="number"
-            pattern="\+?\d{1,4}?[-.\s]?\(?\d{1,3}?\)?[-.\s]?\d{1,4}[-.\s]?\d{1,4}[-.\s]?\d{1,9}"
-            title="Phone number must be digits and can contain spaces, dashes, parentheses and can start with +"
-            required
-            placeholder="Enter phone (111-11-11)"
-            value={number}
-            onChange={handleChangeNumber}
-          />
-        </label>
-
-        <Button type="submit">
-          <span>{'Додати контакт'}</span>
+        <Button
+          type="submit"
+          variant="contained"
+          fullWidth={true}
+          disableElevation={true}
+          sx={{
+            maxWidth: '120px',
+            borderRadius: '8px',
+          }}
+        >
+          Додати
         </Button>
-      </form>
-    </FormContainer>
+      </Box>
+    </>
   );
 };
 

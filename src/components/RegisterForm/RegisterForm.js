@@ -8,11 +8,17 @@ import {
   IconButton,
   InputAdornment,
   Button,
+  Paper,
 } from '@mui/material';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
 import { CustomTextField } from '../CustomTextField/CustomTextField';
-import { useRegistMutation } from 'redux/auth/authApi';
-import { loginValidation, passwordValidation } from '../../services/validation';
+import { useRegistMutation } from 'redux/userAuth/authApi';
+import {
+  loginValidation,
+  passwordValidation,
+  emailValidation,
+} from '../../services/validation';
+import ButtonLink from 'components/ButtonLink/ButtonLink';
 
 export const RegisterForm = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -27,18 +33,27 @@ export const RegisterForm = () => {
   const { isValid } = formState;
   useEffect(() => {
     if (formState.isSubmitSuccessful) {
-      reset({ password: '', email: '', login: '' });
+      reset({ password: '', email: '', name: '' });
     }
   }, [formState, reset, isValid]);
 
   return (
-    <>
-      <Typography variant="h4" component="h4">
-        Зареєструйся
+    <Paper
+      elevation={4}
+      sx={{
+        width: '100%',
+        borderRadius: 0,
+        mt: 1,
+        p: 2,
+        boxSizing: 'border-box',
+      }}
+    >
+      <Typography variant="h6" component="h2">
+        Щоб отримати доступ
       </Typography>
 
       <Typography variant="subtitle1" gutterBottom component="p">
-        Чтобы получить доступ
+        Введи реєстраційні дані
       </Typography>
 
       <Box
@@ -50,38 +65,41 @@ export const RegisterForm = () => {
           width: '100%',
         }}
         component="form"
-        onSubmit={handleSubmit(() => {
-          toast.promise(regist().unwrap(), {
-            loading: 'wait...',
-            success: <b>success</b>,
+        onSubmit={handleSubmit(data => {
+          // console.log(data);
+          toast.promise(regist(data).unwrap(), {
+            loading: 'Намагаюсь зареєструвати...',
+            success: response => `З реєстрацією ${response?.user?.name}`,
             error: error => `${error?.data?._message}`,
           });
         })}
       >
         <Controller
           control={control}
-          name="login"
+          name="name"
           rules={loginValidation}
           defaultValue={''}
           render={({ field }) => (
             <CustomTextField
-              label="Логин"
+              label="Логін"
+              color="formInput"
               onChange={e => field.onChange(e)}
               value={field.value}
               fullWidth={true}
-              error={!!errors.login?.message}
-              helperText={errors?.login?.message}
+              error={!!errors.name?.message}
+              helperText={errors?.name?.message}
             />
           )}
         />
         <Controller
           control={control}
           name="email"
-          rules={loginValidation}
+          rules={emailValidation}
           defaultValue={''}
           render={({ field }) => (
             <CustomTextField
               label="Пошта"
+              color="formInput"
               onChange={e => field.onChange(e)}
               value={field.value}
               fullWidth={true}
@@ -98,6 +116,7 @@ export const RegisterForm = () => {
           render={({ field }) => (
             <CustomTextField
               label="Пароль"
+              color="formInput"
               onChange={e => field.onChange(e)}
               value={field.value}
               fullWidth={true}
@@ -116,7 +135,6 @@ export const RegisterForm = () => {
             />
           )}
         />
-
         <Button
           type="submit"
           variant="contained"
@@ -124,18 +142,24 @@ export const RegisterForm = () => {
           disableElevation={true}
           sx={{
             marginTop: 2,
+            width: '180px',
           }}
         >
-          Войти
+          Зареєструватися
         </Button>
+        <ButtonLink link="/login">
+          <Typography variant="subtitle1" component="span">
+            Маєш акаунт?{' '}
+          </Typography>
+          <Typography
+            variant="subtitle1"
+            component="span"
+            sx={{ color: 'blue' }}
+          >
+            Увійти
+          </Typography>
+        </ButtonLink>
       </Box>
-
-      <Typography variant="subtitle1" component="span">
-        Нету аккаунта?{' '}
-      </Typography>
-      <Typography variant="subtitle1" component="span" sx={{ color: 'blue' }}>
-        Зарегистрируйтесь
-      </Typography>
-    </>
+    </Paper>
   );
 };

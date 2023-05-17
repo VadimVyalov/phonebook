@@ -26,6 +26,7 @@ export const Layout = () => {
             flexDirection: 'column',
             alignItems: 'center',
             maxWidth: 400,
+            minWidth: 280,
             //gap: 3,
             height: 'fit-content',
             boxSizing: 'border-box',

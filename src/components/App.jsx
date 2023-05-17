@@ -3,18 +3,20 @@ import { Route, Routes } from 'react-router-dom';
 import { Layout } from './Layout';
 import { PrivateRoute } from './PrivateRoute';
 import { RestrictedRoute } from './RestrictedRoute';
-import { useAuthenticationQuery } from 'redux/auth/authApi';
-import { useSelector } from 'react-redux';
-import { darkTheme, lightTheme } from './theme/theme';
-import { ThemeProvider } from '@mui/material/styles';
 
+import { useSelector } from 'react-redux';
+import { darkTheme, lightTheme } from '../services/theme';
+import { ThemeProvider } from '@mui/material/styles';
+import { selectTheme } from 'redux/theme/themeSlice';
+import { useAuthenticationQuery } from 'redux/userAuth/authApi';
 const HomePage = lazy(() => import('../pages/Home'));
 const RegisterPage = lazy(() => import('../pages/Register'));
 const LoginPage = lazy(() => import('../pages/Login'));
-const TasksPage = lazy(() => import('../pages/Tasks'));
+const ContactsPage = lazy(() => import('../pages/Contacts'));
+const AddContactsPage = lazy(() => import('../pages/AddContacts'));
 
 export const App = () => {
-  const theme = useSelector(state => state.auth);
+  const theme = useSelector(selectTheme);
   useAuthenticationQuery();
   return (
     <ThemeProvider theme={theme.darkTheme ? darkTheme : lightTheme}>
@@ -42,7 +44,16 @@ export const App = () => {
           <Route
             path="/contacts"
             element={
-              <PrivateRoute redirectTo="/login" component={<TasksPage />} />
+              <PrivateRoute redirectTo="/login" component={<ContactsPage />} />
+            }
+          />
+          <Route
+            path="/addContacts"
+            element={
+              <PrivateRoute
+                redirectTo="/login"
+                component={<AddContactsPage />}
+              />
             }
           />
         </Route>

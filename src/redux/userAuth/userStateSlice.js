@@ -1,35 +1,15 @@
+import { authApi } from './authApi';
 import { createSlice } from '@reduxjs/toolkit';
-import { authApi } from './auth/authApi';
-
-const filterSlice = createSlice({
-  name: 'filter',
-  initialState: '',
-  reducers: {
-    setFilter(_, { payload }) {
-      return payload;
-    },
-  },
-});
-
 const initialState = {
   user: { name: '', email: '' },
   token: '',
-  darkTheme: false,
-  autoTheme: true,
+
   isLoggedIn: false,
 };
-
 const userStateSlice = createSlice({
   name: 'user',
   initialState,
-  reducers: {
-    setDarkTheme: (state, { payload }) => {
-      state.darkTheme = payload; //!state.darkTheme;
-    },
-    setAutoTheme: (state, { payload }) => {
-      state.autoTheme = payload;
-    },
-  },
+  reducers: {},
   extraReducers: builder => {
     builder
       .addMatcher(
@@ -58,8 +38,4 @@ const userStateSlice = createSlice({
       .addMatcher(authApi.endpoints.logout.matchFulfilled, () => initialState);
   },
 });
-
-export const { setFilter } = filterSlice.actions;
-export const filterReducer = filterSlice.reducer;
-export const { setDarkTheme, setAutoTheme } = userStateSlice.actions;
 export const userStateReducer = userStateSlice.reducer;
