@@ -1,33 +1,12 @@
+import { authApi } from './authApi';
 import { createSlice } from '@reduxjs/toolkit';
-import { authApi } from './auth/authApi';
-
-const filterSlice = createSlice({
-  name: 'filter',
-  initialState: '',
-  reducers: {
-    setFilter(_, { payload }) {
-      return payload;
-    },
-  },
-});
-
-// const tokenSlice = createSlice({
-//   name: 'user',
-//   initialState: '',
-//   reducers: {
-//     setToken(state, { payload }) {
-//       state.token = payload;
-//     },
-//   },
-// });
 const initialState = {
   user: { name: '', email: '' },
   token: '',
-  status: '',
+
   isLoggedIn: false,
 };
-
-const tokenUserSlice = createSlice({
+const userStateSlice = createSlice({
   name: 'user',
   initialState,
   reducers: {},
@@ -39,7 +18,6 @@ const tokenUserSlice = createSlice({
           state.user = payload.user;
           state.token = payload.token;
           state.isLoggedIn = true;
-          state.status = 'login';
         }
       )
       .addMatcher(
@@ -48,7 +26,6 @@ const tokenUserSlice = createSlice({
           state.user = payload.user;
           state.token = payload.token;
           state.isLoggedIn = true;
-          state.status = 'login';
         }
       )
       .addMatcher(
@@ -61,7 +38,4 @@ const tokenUserSlice = createSlice({
       .addMatcher(authApi.endpoints.logout.matchFulfilled, () => initialState);
   },
 });
-
-export const { setFilter } = filterSlice.actions;
-export const filterReducer = filterSlice.reducer;
-export const tokenUserReducer = tokenUserSlice.reducer;
+export const userStateReducer = userStateSlice.reducer;

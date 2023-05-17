@@ -1,7 +1,7 @@
 import { configureStore } from '@reduxjs/toolkit';
-import { filterReducer, tokenUserReducer } from './filterSlice';
+import { filterReducer } from './filter/filterSlice';
+import { userStateReducer } from './userAuth/userStateSlice';
 import { contactsApi } from './contacts/contactsApi';
-
 import {
   persistStore,
   persistReducer,
@@ -14,7 +14,8 @@ import {
 } from 'redux-persist';
 
 import storage from 'redux-persist/lib/storage';
-import { authApi } from './auth/authApi';
+import { authApi } from './userAuth/authApi';
+import { themeReducer } from './theme/themeSlice';
 
 const authPersistConfig = {
   key: 'token',
@@ -22,9 +23,14 @@ const authPersistConfig = {
   whitelist: ['token'],
 };
 
+const themePersistConfig = {
+  key: 'darkTheme',
+  storage,
+};
 export const store = configureStore({
   reducer: {
-    auth: persistReducer(authPersistConfig, tokenUserReducer),
+    auth: persistReducer(authPersistConfig, userStateReducer),
+    theme: persistReducer(themePersistConfig, themeReducer),
     filter: filterReducer,
     [contactsApi.reducerPath]: contactsApi.reducer,
     [authApi.reducerPath]: authApi.reducer,

@@ -1,98 +1,165 @@
-import { useEffect } from 'react';
-import { useForm } from 'react-hook-form';
-import { useRegistMutation } from 'redux/auth/authApi';
+import { useEffect, useState } from 'react';
+import { useForm, Controller, useFormState } from 'react-hook-form';
+import toast from 'react-hot-toast';
 
-import css from './RegisterForm.module.css';
+import {
+  Box,
+  Typography,
+  IconButton,
+  InputAdornment,
+  Button,
+  Paper,
+} from '@mui/material';
+import { Visibility, VisibilityOff } from '@mui/icons-material';
+import { CustomTextField } from '../CustomTextField/CustomTextField';
+import { useRegistMutation } from 'redux/userAuth/authApi';
+import {
+  loginValidation,
+  passwordValidation,
+  emailValidation,
+} from '../../services/validation';
+import ButtonLink from 'components/ButtonLink/ButtonLink';
 
 export const RegisterForm = () => {
+  const [showPassword, setShowPassword] = useState(false);
+  const handleClickShowPassword = () => setShowPassword(show => !show);
   const [regist] = useRegistMutation();
 
-  const { register, handleSubmit, reset, formState } = useForm({
-    defaultValues: { name: 'AAA', email: 'aaa@mail.com', password: 'A123456a' },
+  const { control, handleSubmit, reset, formState } = useForm();
+  const { errors } = useFormState({
+    control,
   });
   // const { isDirty, isValid } = formState;
   const { isValid } = formState;
   useEffect(() => {
     if (formState.isSubmitSuccessful) {
-      reset({ password: '', email: '' });
+      reset({ password: '', email: '', name: '' });
     }
-
-    // console.log(formState.errors);
-
-    Object.entries(formState.errors).map(([type, { message }]) =>
-      console.log(type, '=>', message)
-    );
   }, [formState, reset, isValid]);
 
-  // const handleSubmit = e => {
-  //   e.preventDefault();
-  //   const form = e.currentTarget;
-  //   dispatch(
-  //     register({
-  //       name: form.elements.name.value,
-  //       email: form.elements.email.value,
-  //       password: form.elements.password.value,
-  //     })
-  //   );
-  //   form.reset();
-  // };
-
   return (
-    // <form className={css.form} onSubmit={handleSubmit} autoComplete="off">
-    //   <label className={css.label}>
-    //     Username
-    //     <input type="text" name="name" />
-    //   </label>
-    //   <label className={css.label}>
-    //     Email
-    //     <input type="email" name="email" />
-    //   </label>
-    //   <label className={css.label}>
-    //     Password
-    //     <input type="password" name="password" />
-    //   </label>
-    //   <button type="submit">Register</button>
-    // </form>
-    <form className={css.form} onSubmit={handleSubmit(regist)}>
-      <label className={css.label}>
-        Email
-        <input
-          type="text"
-          placeholder="Name"
-          {...register('name', {
-            required: 'Name не заповнено',
-            pattern: { value: /^\S+$/i, message: 'Не вірний формат' },
-          })}
-        />
-      </label>
+    <Paper
+      elevation={4}
+      sx={{
+        width: '100%',
+        borderRadius: 0,
+        mt: 1,
+        p: 2,
+        boxSizing: 'border-box',
+      }}
+    >
+      <Typography variant="h6" component="h2">
+        Щоб отримати доступ
+      </Typography>
 
-      <label className={css.label}>
-        Email
-        <input
-          type="text"
-          placeholder="Email"
-          {...register('email', {
-            required: 'Mail не заповнено',
-            pattern: { value: /^\S+@\S+$/i, message: 'Не вірний формат' },
-          })}
-        />
-      </label>
+      <Typography variant="subtitle1" gutterBottom component="p">
+        Введи реєстраційні дані
+      </Typography>
 
-      <label className={css.label}>
-        Password
-        <input
-          type="password"
-          placeholder="Password"
-          {...register('password', {
-            required: 'Пароль не заповнено',
-            max: 10,
-            min: 7,
-            maxLength: 20,
-          })}
+      <Box
+        sx={{
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          gap: 2,
+          width: '100%',
+        }}
+        component="form"
+        onSubmit={handleSubmit(data => {
+          // console.log(data);
+          toast.promise(regist(data).unwrap(), {
+            loading: 'Намагаюсь зареєструвати...',
+            success: response => `З реєстрацією ${response?.user?.name}`,
+            error: error => `${error?.data?._message}`,
+          });
+        })}
+      >
+        <Controller
+          control={control}
+          name="name"
+          rules={loginValidation}
+          defaultValue={''}
+          render={({ field }) => (
+            <CustomTextField
+              label="Логін"
+              color="formInput"
+              onChange={e => field.onChange(e)}
+              value={field.value}
+              fullWidth={true}
+              error={!!errors.name?.message}
+              helperText={errors?.name?.message}
+            />
+          )}
         />
-      </label>
-
-      <button type="submit">LogIn</button>
-    </form>
+        <Controller
+          control={control}
+          name="email"
+          rules={emailValidation}
+          defaultValue={''}
+          render={({ field }) => (
+            <CustomTextField
+              label="Пошта"
+              color="formInput"
+              onChange={e => field.onChange(e)}
+              value={field.value}
+              fullWidth={true}
+              error={!!errors.email?.message}
+              helperText={errors?.email?.message}
+            />
+          )}
+        />
+        <Controller
+          control={control}
+          name="password"
+          rules={passwordValidation}
+          defaultValue={''}
+          render={({ field }) => (
+            <CustomTextField
+              label="Пароль"
+              color="formInput"
+              onChange={e => field.onChange(e)}
+              value={field.value}
+              fullWidth={true}
+              error={!!errors?.password?.message}
+              helperText={errors?.password?.message}
+              type={showPassword ? 'text' : 'password'}
+              InputProps={{
+                endAdornment: (
+                  <InputAdornment position="end">
+                    <IconButton onClick={handleClickShowPassword} edge="end">
+                      {showPassword ? <VisibilityOff /> : <Visibility />}
+                    </IconButton>
+                  </InputAdornment>
+                ),
+              }}
+            />
+          )}
+        />
+        <Button
+          type="submit"
+          variant="contained"
+          fullWidth={true}
+          disableElevation={true}
+          sx={{
+            marginTop: 2,
+            width: '180px',
+          }}
+        >
+          Зареєструватися
+        </Button>
+        <ButtonLink link="/login">
+          <Typography variant="subtitle1" component="span">
+            Маєш акаунт?{' '}
+          </Typography>
+          <Typography
+            variant="subtitle1"
+            component="span"
+            sx={{ color: 'blue' }}
+          >
+            Увійти
+          </Typography>
+        </ButtonLink>
+      </Box>
+    </Paper>
   );
 };
